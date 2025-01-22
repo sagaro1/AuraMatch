@@ -2,12 +2,11 @@ import mongoose from "mongoose";
 
 const connecttodB = async () => {
   try {
-    await mongoose.connect(
-      "mongodb+srv://ramrshrcg:jH82.Q2sVAJt9at@aura.tdrnf.mongodb.net/?retryWrites=true&w=majority&appName=Aura"
-    );
+    await mongoose.connect(process.env.mongodb_url);
     console.log("Connected to MongoDB");
   } catch (error) {
     console.log("Error connecting to MongoDB");
+    console.log(process.env.mongodb_url);
   }
 };
 

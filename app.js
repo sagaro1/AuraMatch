@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
-import fs from "fs";
 import sharp from "sharp";
 import path from "path";
+import mongoose from "mongoose";
 
 import connecttodB from "./connectToDb/index.js";
 import dotenv from "dotenv";
@@ -14,7 +14,6 @@ import Hair from "./model/hairModel.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
-connecttodB();
 dotenv.config();
 const upload = multer({ storage: storage });
 
@@ -45,7 +44,6 @@ app.post("/enter/beard", upload.single("image"), async (req, res) => {
   const image = req.file.filename;
 
   console.log(req.body);
-  
 
   await Beard.create({
     faceshape,
@@ -60,13 +58,11 @@ app.post("/enter/beard", upload.single("image"), async (req, res) => {
   });
 });
 
-
 app.post("/enter/glass", upload.single("image"), async (req, res) => {
   const { faceshape, gender, glassstyle, description } = req.body;
   const image = req.file.filename;
 
   console.log(req.body);
-  
 
   await Glass.create({
     faceshape,
@@ -81,22 +77,20 @@ app.post("/enter/glass", upload.single("image"), async (req, res) => {
   });
 });
 
-
-
-
 app.get("/api/users", async (req, res) => {
   const { faceshape, gender } = req.query;
   console.log(req.query);
 
-  const filteredBread = await Beard.find({gender,faceshape});
-  const filteredGlass = await Glass.find({gender,faceshape});
-  const filteredHair = await Hair.find({gender,faceshape});
+  const filteredBread = await Beard.find({ gender, faceshape });
+  const filteredGlass = await Glass.find({ gender, faceshape });
+  const filteredHair = await Hair.find({ gender, faceshape });
 
-  //compress the image 
+  //compress the image
   const resizeImages = async (data) => {
     return Promise.all(
       data.map(async (item) => {
-        if (item.image) { // Assuming `image` contains the file path
+        if (item.image) {
+          // Assuming `image` contains the file path
           const filePath = path.resolve("./storage", item.image);
           try {
             // Resize the image to 240p height
@@ -105,7 +99,9 @@ app.get("/api/users", async (req, res) => {
               .toBuffer();
 
             // Convert to Base64 string
-            const resizedImage = `data:image/jpeg;base64,${resizedBuffer.toString("base64")}`;
+            const resizedImage = `data:image/jpeg;base64,${resizedBuffer.toString(
+              "base64"
+            )}`;
 
             // Return updated item with resized image
             return { ...item.toObject(), image: resizedImage };
@@ -127,47 +123,32 @@ app.get("/api/users", async (req, res) => {
     filteredBread: resizedBread,
     filteredGlass: resizedGlass,
     filteredHair: resizedHair,
-
   });
-
-
-
-  });
-
+});
 
 app.get("/api/users/:id", async (req, res) => {
   const id = req.params.id;
-  const {box}= req.query
+  const { box } = req.query;
   console.log(box);
 
-   
-  if(box==='beard')
-  {
+  if (box === "beard") {
     const data = await Beard.findById(id);
-     console.log(data);
-     res.status(200).json(data);
-
+    console.log(data);
+    res.status(200).json(data);
   }
-  if(box==='glass')
-    {
-      const data = await Glass.findById(id);
-       console.log(data);
-       res.status(200).json(data);
-  
-    }
-    if(box==='hair')
-      {
-        const data = await Hair.findById(id);
-         console.log(data);
-         res.status(200).json(data);
-    
-      }
-
-  
+  if (box === "glass") {
+    const data = await Glass.findById(id);
+    console.log(data);
+    res.status(200).json(data);
+  }
+  if (box === "hair") {
+    const data = await Hair.findById(id);
+    console.log(data);
+    res.status(200).json(data);
+  }
 });
 
-
-
-app.listen(port, () => {
+app.listen(port, async () => {
   console.log(`server is running on port ${port}`);
+  await mongoose.connect(process.env.mongodb_url);
 });
