@@ -83,7 +83,7 @@ app.post("/enter/hair", upload.single("image"), async (req, res) => {
 
   console.log(req.body);
 
-  await Beard.create({
+  await Hair.create({
     faceshape,
     gender,
     image,
@@ -92,7 +92,7 @@ app.post("/enter/hair", upload.single("image"), async (req, res) => {
   });
 
   res.status(200).json({
-    message: "beard  done",
+    message: "hair done",
   });
 });
 
@@ -111,8 +111,6 @@ app.get("/api/users", async (req, res) => {
   const filteredGlass = await Glass.find({ gender, faceshape });
   const filteredBread = await Beard.find({ gender, faceshape });
   const filteredHair = await Hair.find({ gender, faceshape });
-
-  
 
   res.status(200).json({
     filteredBread,
