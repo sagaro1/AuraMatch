@@ -21,23 +21,23 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static("./storage"));
 
-app.post("/enter/face", upload.single("image"), async (req, res) => {
-  const { faceshape, gender } = req.body;
-  const image = req.file.filename;
+// app.post("/enter/face", upload.single("image"), async (req, res) => {
+//   const { faceshape, gender } = req.body;
+//   const image = req.file.filename;
 
-  console.log(req.body);
-  console.log(req.file.filename);
+//   console.log(req.body);
+//   console.log(req.file.filename);
 
-  await FaceData.create({
-    faceshape,
-    gender,
-    image,
-  });
+//   await FaceData.create({
+//     faceshape,
+//     gender,
+//     image,
+//   });
 
-  res.status(200).json({
-    message: "okay done",
-  });
-});
+//   res.status(200).json({
+//     message: "okay done",
+//   });
+// });
 
 app.post("/enter/beard", upload.single("image"), async (req, res) => {
   const { faceshape, gender, beardstyle, description } = req.body;
@@ -74,6 +74,25 @@ app.post("/enter/glass", upload.single("image"), async (req, res) => {
 
   res.status(200).json({
     message: "glass  done",
+  });
+});
+
+app.post("/enter/glass", upload.single("image"), async (req, res) => {
+  const { faceshape, gender, hairstyle, description } = req.body;
+  const image = req.file.filename;
+
+  console.log(req.body);
+
+  await Beard.create({
+    faceshape,
+    gender,
+    image,
+    hairstyle,
+    description,
+  });
+
+  res.status(200).json({
+    message: "beard  done",
   });
 });
 
