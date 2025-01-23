@@ -96,12 +96,20 @@ app.post("/enter/hair", upload.single("image"), async (req, res) => {
   });
 });
 
+app.get("/all", async (req, res) => {
+  const data = await Glass.find();
+  res.status(200).json({
+    message: "this",
+    data,
+  });
+});
+
 app.get("/api/users", async (req, res) => {
   const { faceshape, gender } = req.query;
   console.log(req.query);
 
-  const filteredBread = await Beard.find({ gender, faceshape });
   const filteredGlass = await Glass.find({ gender, faceshape });
+  const filteredBread = await Beard.find({ gender, faceshape });
   const filteredHair = await Hair.find({ gender, faceshape });
 
   //compress the image
