@@ -13,7 +13,7 @@ import Glass from "./model/glassModel.js";
 import Hair from "./model/hairModel.js";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 dotenv.config();
 const upload = multer({ storage: storage });
 
