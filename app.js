@@ -77,7 +77,7 @@ app.post("/enter/glass", upload.single("image"), async (req, res) => {
   });
 });
 
-app.post("/enter/glass", upload.single("image"), async (req, res) => {
+app.post("/enter/hair", upload.single("image"), async (req, res) => {
   const { faceshape, gender, hairstyle, description } = req.body;
   const image = req.file.filename;
 
